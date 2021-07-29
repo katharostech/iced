@@ -13,6 +13,7 @@ pub struct Compositor {
     queue: wgpu::Queue,
     staging_belt: wgpu::util::StagingBelt,
     local_pool: futures::executor::LocalPool,
+    compatible_surface: Option<wgpu::Surface>,
 }
 
 impl Compositor {
@@ -69,6 +70,7 @@ impl Compositor {
             queue,
             staging_belt,
             local_pool,
+            compatible_surface,
         })
     }
 
@@ -105,7 +107,9 @@ impl iced_graphics::window::Compositor for Compositor {
     ) -> wgpu::Surface {
         #[allow(unsafe_code)]
         unsafe {
-            self.instance.create_surface(window)
+            self.compatible_surface
+                .take()
+                .unwrap_or_else(|| self.instance.create_surface(window))
         }
     }
 
@@ -118,7 +122,7 @@ impl iced_graphics::window::Compositor for Compositor {
         self.device.create_swap_chain(
             surface,
             &wgpu::SwapChainDescriptor {
-                usage: wgpu::TextureUsage::RENDER_ATTACHMENT,
+                usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
                 format: self.settings.format,
                 present_mode: self.settings.present_mode,
                 width,

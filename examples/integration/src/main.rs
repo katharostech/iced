@@ -31,7 +31,7 @@ pub fn main() {
     let mut clipboard = Clipboard::connect(&window);
 
     // Initialize wgpu
-    let instance = wgpu::Instance::new(wgpu::BackendBit::PRIMARY);
+    let instance = wgpu::Instance::new(wgpu::Backends::PRIMARY);
     let surface = unsafe { instance.create_surface(&window) };
 
     let (mut device, queue) = futures::executor::block_on(async {
@@ -64,7 +64,7 @@ pub fn main() {
         device.create_swap_chain(
             &surface,
             &wgpu::SwapChainDescriptor {
-                usage: wgpu::TextureUsage::RENDER_ATTACHMENT,
+                usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
                 format: format,
                 width: size.width,
                 height: size.height,
@@ -158,7 +158,7 @@ pub fn main() {
                     swap_chain = device.create_swap_chain(
                         &surface,
                         &wgpu::SwapChainDescriptor {
-                            usage: wgpu::TextureUsage::RENDER_ATTACHMENT,
+                            usage: wgpu::TextureUsages::RENDER_ATTACHMENT,
                             format: format,
                             width: size.width,
                             height: size.height,

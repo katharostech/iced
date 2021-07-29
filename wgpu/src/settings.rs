@@ -17,7 +17,7 @@ pub struct Settings {
     pub present_mode: wgpu::PresentMode,
 
     /// The internal graphics backend to use.
-    pub internal_backend: wgpu::BackendBit,
+    pub internal_backend: wgpu::Backends,
 
     /// The bytes of the font that will be used by default.
     ///
@@ -59,7 +59,7 @@ impl Settings {
     pub fn from_env() -> Self {
         Settings {
             internal_backend: backend_from_env()
-                .unwrap_or(wgpu::BackendBit::PRIMARY),
+                .unwrap_or(wgpu::Backends::PRIMARY),
             ..Self::default()
         }
     }
@@ -70,7 +70,7 @@ impl Default for Settings {
         Settings {
             format: wgpu::TextureFormat::Bgra8UnormSrgb,
             present_mode: wgpu::PresentMode::Mailbox,
-            internal_backend: wgpu::BackendBit::PRIMARY,
+            internal_backend: wgpu::Backends::PRIMARY,
             default_font: None,
             default_text_size: 20,
             text_multithreading: false,
@@ -79,16 +79,16 @@ impl Default for Settings {
     }
 }
 
-fn backend_from_env() -> Option<wgpu::BackendBit> {
+fn backend_from_env() -> Option<wgpu::Backends> {
     std::env::var("WGPU_BACKEND").ok().map(|backend| {
         match backend.to_lowercase().as_str() {
-            "vulkan" => wgpu::BackendBit::VULKAN,
-            "metal" => wgpu::BackendBit::METAL,
-            "dx12" => wgpu::BackendBit::DX12,
-            "dx11" => wgpu::BackendBit::DX11,
-            "gl" => wgpu::BackendBit::GL,
-            "webgpu" => wgpu::BackendBit::BROWSER_WEBGPU,
-            "primary" => wgpu::BackendBit::PRIMARY,
+            "vulkan" => wgpu::Backends::VULKAN,
+            "metal" => wgpu::Backends::METAL,
+            "dx12" => wgpu::Backends::DX12,
+            "dx11" => wgpu::Backends::DX11,
+            "gl" => wgpu::Backends::GL,
+            "webgpu" => wgpu::Backends::BROWSER_WEBGPU,
+            "primary" => wgpu::Backends::PRIMARY,
             other => panic!("Unknown backend: {}", other),
         }
     })

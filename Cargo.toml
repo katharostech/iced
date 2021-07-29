@@ -10,6 +10,7 @@ documentation = "https://docs.rs/iced"
 readme = "README.md"
 keywords = ["gui", "ui", "graphics", "interface", "widgets"]
 categories = ["gui"]
+resolver = "2"
 
 [features]
 default = ["wgpu", "default_system_font"]
@@ -105,3 +106,6 @@ iced_web = { version = "0.4", path = "web" }
 [package.metadata.docs.rs]
 rustdoc-args = ["--cfg", "docsrs"]
 features = ["image", "svg", "canvas", "qr_code"]
+
+[patch.crates-io]
+wgpu = { path = "../wgpu/wgpu" }
